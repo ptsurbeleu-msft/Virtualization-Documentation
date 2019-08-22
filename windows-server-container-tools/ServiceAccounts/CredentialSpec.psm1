@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 
 # Helper function to obtain credential spec directory
-# Order: Docker Root Directory, Docker Graph Directory, Program Data
+# Order: Docker Root Directory, Docker Graph Directory, Enironment Variable, Program Data
 $Script:CredSpecRoot = $null
 function GetCredSpecRoot {
     # Check if root already computed
@@ -12,6 +12,12 @@ function GetCredSpecRoot {
 
     # Default location is Docker's Program Data folder
     $root = "$env:ProgramData\Docker"
+
+    # Alternate location as specified in CREDSPEC_ROOT environment variable
+    $AlternateCredSpecRoot = $env:CREDSPEC_ROOT
+    if (Test-Path $AlternateCredSpecRoot) {
+        $root = $AlternateCredSpecRoot
+    }
 
     # First, try to query the Docker root directory
     try {
